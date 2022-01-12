@@ -27,17 +27,21 @@ class ProductController extends AbstractController
     
     public function index(Request $request): Response
     {
-        $products = $this->entityManager->getRepository(Product::class)->findAll();
-
+        //$products = $this->entityManager->getRepository(Product::class)->findAll();
         $search = new Search;
         $form = $this->createForm(SearchType::class, $search);
 
         $form ->handleRequest($request);
         
         if($form->isSubmitted() && $form->isValid()){
-            $product = $this->entityManager->getRepository(Product::class)->findAll($search);
-            //dd($search);
+            $products = $this->entityManager->getRepository(Product::class)->findwithSearch($search);
+
+        }else{
+            $products = $this->entityManager->getRepository(Product::class)->findAll();
+
         }
+           
+        
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
@@ -51,12 +55,16 @@ class ProductController extends AbstractController
     public function show($slug): Response
     {
         $product = $this->entityManager->getRepository(Product::class)->findOneBySlug($slug);
-        
+        $products= $this->entityManager->getRepository(Product::class)->findByIsBest(1);
+
         if(!$product){
             return $this->redirectToRoute('products');
         }
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
+            'products' => $products,
+
         ]);
     }
 }

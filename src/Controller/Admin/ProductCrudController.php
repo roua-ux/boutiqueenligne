@@ -32,7 +32,7 @@ class ProductCrudController extends AbstractCrudController
                 ->setRequired(false),
             TextField::new('subtitle'),
             TextField::new('description'),
-           // BooleanField::new('isBest'),
+            BooleanField::new('isBest'),
             MoneyField::new('price')->setCurrency('TND'),
             AssociationField::new('category'),
 
